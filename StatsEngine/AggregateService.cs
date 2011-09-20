@@ -3,34 +3,25 @@
     using System;
 
     public class AggregateService
-    {
-        private readonly EventorWebService webService;
-        private readonly EventParser eventParser;
-        private readonly OrganisationParser orgParser;
-        private readonly ExcelWriter writer;
+    {        
+        private readonly EventRepository eventRepository;
+        private readonly OrganisationRepository orgRepository;
+        private readonly ExcelWriter excelWriter;
 
-        public AggregateService(EventorWebService webService, EventParser eventParser, OrganisationParser orgParser, ExcelWriter writer)
+        public AggregateService(EventRepository eventRepository, OrganisationRepository orgRepository, ExcelWriter excelWriter)
         {
-            this.webService = webService;
-            this.eventParser = eventParser;
-            this.orgParser = orgParser;
-            this.writer = writer;
+            this.eventRepository = eventRepository;
+            this.orgRepository = orgRepository;
+            this.excelWriter = excelWriter;
         }
 
         public void CreateExcelFile(string excelFileName, DateTime fromDate)
         {                        
-            var toDate = fromDate.AddYears(1);
-
-            string eventsXml = webService.GetEvents(fromDate, toDate);
-            string orgXml = webService.GetAllOrganisations();
-
-            var fileRows = eventParser.Parse(eventsXml);
-            orgParser.Load(orgXml);
-
-            orgParser.FillOrgNames(fileRows);
+            var fileRows = eventRepository.GetAllEventsForNextYear(fromDate);
+            
+            orgRepository.FillOrgNames(fileRows);
            
-
-            writer.Write(fileRows, excelFileName);
+            excelWriter.Write(fileRows, excelFileName);
         }
     }
 }

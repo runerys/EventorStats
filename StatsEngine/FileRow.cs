@@ -1,5 +1,4 @@
-﻿
-namespace StatsEngine
+﻿namespace StatsEngine
 {
     using FileHelpers;
 

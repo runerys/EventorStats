@@ -1,8 +1,6 @@
-﻿
-namespace StatsEngine
+﻿namespace StatsEngine
 {
     using System.Collections.Generic;
-
     using FileHelpers.DataLink;
 
     public class ExcelWriter

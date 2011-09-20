@@ -2,42 +2,36 @@
 {
     using System;
     using System.Reflection;
-
     using Autofac;
-
     using StatsEngine;
 
     public class Program
     {
         static void Main(string[] args)
         {
-            Console.Write("Please, provide your apikey and press [Enter]: ");
-            var apiKey = Console.ReadLine();            
+            Console.Write("Please, provide your ApiKey and press [Enter]: ");
+            var apiKey = Console.ReadLine();
+            var baseUrl = "https://eventor.orientering.no/api/";
 
-            var service = GetAggregateService(apiKey);
-
+            var container = CreateContainer(apiKey, baseUrl);
+            
             string excelFileName = @"c:\temp\eventor.xls";
             var fromDate = new DateTime(2011, 01, 01);
 
+            var service = container.Resolve<AggregateService>();
             service.CreateExcelFile(excelFileName, fromDate);
 
             Console.WriteLine("The file is generated at " + excelFileName + ". Press [Enter] to exit.");
             Console.ReadLine();
         }
 
-        private static AggregateService GetAggregateService(string apiKey)
+        private static IContainer CreateContainer(string apiKey, string baseUrl)
         {
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(AggregateService)));
-
-            var eventorService = new EventorWebService();
-            eventorService.ApiKey = apiKey;
-            containerBuilder.RegisterInstance(eventorService);
-
+            containerBuilder.RegisterInstance(new EventorWebService(apiKey, baseUrl));
             var container = containerBuilder.Build();
-
-            var service = container.Resolve<AggregateService>();
-            return service;
+            return container;
         }
     }
 }

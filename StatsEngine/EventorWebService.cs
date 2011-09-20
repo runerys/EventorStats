@@ -1,19 +1,19 @@
-﻿
-namespace StatsEngine
+﻿namespace StatsEngine
 {
     using System;
     using System.Net;
     using System.Text;
 
     public class EventorWebService
-    {      
-        public EventorWebService()
-        {
-            BaseUrl = "https://eventor.orientering.no/api/";
-        }
+    {
+        private readonly string apiKey;
+        private readonly string baseUrl;
 
-        public string ApiKey { get; set; }
-        public string BaseUrl { get; set; }
+        public EventorWebService(string apiKey, string baseUrl)
+        {
+            this.apiKey = apiKey;
+            this.baseUrl = baseUrl;
+        }
 
         public string GetEvents(DateTime from, DateTime to)
         {
@@ -31,13 +31,10 @@ namespace StatsEngine
 
         private string Get(string query)
         {
-            if (string.IsNullOrEmpty(ApiKey))
-                throw new InvalidOperationException("Missing ApiKey for Http Header");
-
             var client = new WebClient();
-            client.Headers.Add("ApiKey", ApiKey);
+            client.Headers.Add("ApiKey", apiKey);
 
-            string url = string.Format("{0}{1}", BaseUrl, query);
+            string url = string.Format("{0}{1}", baseUrl, query);
 
             var bytes = client.DownloadData(url);
             var response = Encoding.UTF8.GetString(bytes);

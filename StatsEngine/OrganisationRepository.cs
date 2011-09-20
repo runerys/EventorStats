@@ -1,12 +1,16 @@
-﻿using System.Linq;
-
-namespace StatsEngine
+﻿namespace StatsEngine
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Xml.Linq;
 
-    public class OrganisationParser
+    public class OrganisationRepository
     {
+        public OrganisationRepository(EventorWebService webService)
+        {           
+            Load(webService.GetAllOrganisations());
+        }
+
         private List<Org> orgs;
 
         public IEnumerable<Org> Orgs
@@ -17,7 +21,7 @@ namespace StatsEngine
             }
         }
 
-        public void Load(string xmlString)
+        private void Load(string xmlString)
         {
             xmlString = xmlString.Replace("&", "");
 

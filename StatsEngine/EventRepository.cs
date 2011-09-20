@@ -1,13 +1,26 @@
-﻿using System.Linq;
-
-namespace StatsEngine
+﻿namespace StatsEngine
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Xml.Linq;
 
-    public class EventParser
-    {      
-        public List<FileRow> Parse(string xmlString)
+    public class EventRepository
+    {
+        private readonly EventorWebService webService;
+
+        public EventRepository(EventorWebService webService)
+        {
+            this.webService = webService;
+        }
+
+        public List<FileRow> GetAllEventsForNextYear(DateTime fromDate)
+        {
+            var xml = webService.GetEvents(fromDate, fromDate.AddYears(1));
+            return this.Parse(xml);
+        }
+
+        private List<FileRow> Parse(string xmlString)
         {
             xmlString = xmlString.Replace("&", "");
 
