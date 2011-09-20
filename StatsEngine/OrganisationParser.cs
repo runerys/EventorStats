@@ -7,7 +7,17 @@ namespace StatsEngine
 
     public class OrganisationParser
     {
-        public List<Org> Parse(string xmlString)
+        private List<Org> orgs;
+
+        public IEnumerable<Org> Orgs
+        {
+            get
+            {
+                return orgs;
+            }
+        }
+
+        public void Load(string xmlString)
         {
             xmlString = xmlString.Replace("&", "");
 
@@ -31,7 +41,20 @@ namespace StatsEngine
                                ParentName = parent.Name
                            };
 
-            return orgs.ToList();
+            this.orgs = orgs.ToList();
+        }
+
+        public void FillOrgNames(List<FileRow> rows)
+        {
+            rows.ForEach(LookUpOrgInfo);
+        }
+
+        private void LookUpOrgInfo(FileRow fileRow)
+        {
+            var org = orgs.Find(o => o.Id == fileRow.OrgId);
+
+            fileRow.OrgName = org.Name;
+            fileRow.ParentOrgName = org.ParentName;
         }
     }
 }

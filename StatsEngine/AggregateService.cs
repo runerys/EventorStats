@@ -4,24 +4,33 @@
 
     public class AggregateService
     {
-        public void CreateExcelFile()
-        {
-            string excelFileName = @"c:\temp\eventor.xls";
+        private readonly EventorWebService webService;
+        private readonly EventParser eventParser;
+        private readonly OrganisationParser orgParser;
+        private readonly ExcelWriter writer;
 
-            var fromDate = new DateTime(2011, 01, 01);
+        public AggregateService(EventorWebService webService, EventParser eventParser, OrganisationParser orgParser, ExcelWriter writer)
+        {
+            this.webService = webService;
+            this.eventParser = eventParser;
+            this.orgParser = orgParser;
+            this.writer = writer;
+        }
+
+        public void CreateExcelFile(string excelFileName, DateTime fromDate)
+        {                        
             var toDate = fromDate.AddYears(1);
 
-            var proxy = new EventorWebService();
-            string eventsXml = proxy.GetEvents(fromDate, toDate);
-            string orgXml = proxy.GetAllOrganisations();
+            string eventsXml = webService.GetEvents(fromDate, toDate);
+            string orgXml = webService.GetAllOrganisations();
 
-            var fileRows = new EventParser().Parse(eventsXml);
+            var fileRows = eventParser.Parse(eventsXml);
+            orgParser.Load(orgXml);
 
-            var orgs = new OrganisationParser().Parse(orgXml);
+            orgParser.FillOrgNames(fileRows);
+           
 
-            new OrgFiller(orgs).FillOrgNames(fileRows);
-
-            new ExcelWriter().Write(fileRows, excelFileName);
+            writer.Write(fileRows, excelFileName);
         }
     }
 }

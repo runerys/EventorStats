@@ -6,7 +6,7 @@ namespace StatsEngine
     using System.Xml.Linq;
 
     public class EventParser
-    {
+    {      
         public List<FileRow> Parse(string xmlString)
         {
             xmlString = xmlString.Replace("&", "");

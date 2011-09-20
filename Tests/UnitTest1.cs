@@ -44,11 +44,10 @@ namespace Tests
             string orgFileContent =
                 File.ReadAllText(
                     @"C:\Users\rune.rystad\Documents\Visual Studio 2010\Projects\EventorStats\Tests\Data\Organisations.xml");
-            var orgs = orgParser.Parse(orgFileContent);
+            
+            orgParser.Load(orgFileContent);
 
-            var orgFiller = new OrgFiller(orgs);
-
-            orgFiller.FillOrgNames(result);
+            orgParser.FillOrgNames(result);
 
             var writer = new ExcelWriter();
             writer.Write(result, @"c:\temp\eventor.xls");
@@ -64,7 +63,9 @@ namespace Tests
             string fileContent =
                 File.ReadAllText(
                     @"C:\Users\rune.rystad\Documents\Visual Studio 2010\Projects\EventorStats\Tests\Data\Organisations.xml");
-            var result = xmlParser.Parse(fileContent);
+            xmlParser.Load(fileContent);
+
+            var result = xmlParser.Orgs;
 
             var nsk = (from o in result where o.Id == "245" select o).First();
 
@@ -92,10 +93,5 @@ namespace Tests
             Assert.IsNotNull(response);
         }
 
-        [TestMethod]
-        public void FullProcess()
-        {
-            new AggregateService().CreateExcelFile();
-        }
     }
 }
