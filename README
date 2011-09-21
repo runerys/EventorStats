@@ -1,0 +1,3 @@
+This project is a small tool for downloading usage statistics for the Eventor orienteering entry solution.
+
+Users will have to provide their own ApiKey. If you don't have one, or know how to get one, you probably shouldn't use the tool anyway ;)
