@@ -43,10 +43,12 @@
   <ItemGroup>
     <Compile Include="AggregateService.cs" />
     <Compile Include="EventorWebService.cs" />
+    <Compile Include="EventParser.cs" />
     <Compile Include="Org.cs" />
-    <Compile Include="OrganisationRepository.cs" />
+    <Compile Include="OrgParser.cs" />
+    <Compile Include="OrgRepository.cs" />
     <Compile Include="ExcelWriter.cs" />
-    <Compile Include="FileRow.cs" />
+    <Compile Include="Event.cs" />
     <Compile Include="EventRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

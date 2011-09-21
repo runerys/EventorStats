@@ -7,7 +7,7 @@
 
     public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             Console.Write("Please, provide your ApiKey and press [Enter]: ");
             var apiKey = Console.ReadLine();

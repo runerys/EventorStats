@@ -1,97 +1,67 @@
-﻿//using System.Linq;
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-//namespace Tests
-//{
-//    using System;
-//    using System.IO;
+namespace Tests
+{
+    using System;
+    using System.IO;
 
-//    using StatsEngine;
+    using StatsEngine;
 
-//    /// <summary>
-//    /// Summary description for UnitTest1
-//    /// </summary>
-//    [TestClass]
-//    public class XmlParserTest
-//    {
+    /// <summary>
+    /// Summary description for UnitTest1
+    /// </summary>
+    [TestClass]
+    public class XmlParserTest
+    {
+        [TestMethod]
+        public void TestMethod1()
+        {
+            var xmlParser = new EventParser();
 
+            string fileContent =
+                File.ReadAllText(
+                    @"C:\Users\rune.rystad\Documents\Visual Studio 2010\Projects\EventorStats\Tests\Data\Downloaded.xml");
+            var result = xmlParser.Parse(fileContent);
 
-//        [TestMethod]
-//        public void TestMethod1()
-//        {
-//            var xmlParser = new EventRepository();
+            Assert.IsNotNull(result);
+        }
+     
+        [TestMethod]
+        public void ParseOrganisations()
+        {
+            var xmlParser = new OrgParser();
 
-//            string fileContent =
-//                File.ReadAllText(
-//                    @"C:\Users\rune.rystad\Documents\Visual Studio 2010\Projects\EventorStats\Tests\Data\Downloaded.xml");
-//            var result = xmlParser.Parse(fileContent);
+            string fileContent =
+                File.ReadAllText(
+                    @"C:\Users\rune.rystad\Documents\Visual Studio 2010\Projects\EventorStats\Tests\Data\Organisations.xml");
 
-//            Assert.IsNotNull(result);
-//        }
+            var result = xmlParser.Parse(fileContent);
 
-//        [TestMethod]
-//        public void TestMethod2()
-//        {
-//            var xmlParser = new EventRepository();
+            var nsk = (from o in result where o.Id == "245" select o).First();
 
-//            string fileContent =
-//                File.ReadAllText(
-//                    @"C:\Users\rune.rystad\Documents\Visual Studio 2010\Projects\EventorStats\Tests\Data\Downloaded.xml");
-//            var result = xmlParser.Parse(fileContent);
+            Assert.AreEqual("3", nsk.ParentId);
+            Assert.AreEqual("Akershus og Oslo", nsk.ParentName);
+        }
 
-//            var orgParser = new OrganisationRepository();
+        [TestMethod]
+        public void DownloadEvents()
+        {
+            var proxy = new EventorWebService("apikey", string.Empty);
 
-//            string orgFileContent =
-//                File.ReadAllText(
-//                    @"C:\Users\rune.rystad\Documents\Visual Studio 2010\Projects\EventorStats\Tests\Data\Organisations.xml");
-            
-//            orgParser.Load(orgFileContent);
+            var events = proxy.GetEvents(new DateTime(2011, 01, 01), new DateTime(2012, 01, 01));
 
-//            orgParser.FillOrgNames(result);
+            Assert.IsNotNull(events);
+        }
 
-//            var writer = new ExcelWriter();
-//            writer.Write(result, @"c:\temp\eventor.xls");
+        [TestMethod]
+        public void DownloadOrganisations()
+        {
+            var proxy = new EventorWebService("apikey", string.Empty);
 
-//            Assert.IsNotNull(result);
-//        }
+            var response = proxy.GetAllOrganisations();
 
-//        [TestMethod]
-//        public void ParseOrganisations()
-//        {
-//            var xmlParser = new OrganisationRepository();
-
-//            string fileContent =
-//                File.ReadAllText(
-//                    @"C:\Users\rune.rystad\Documents\Visual Studio 2010\Projects\EventorStats\Tests\Data\Organisations.xml");
-//            xmlParser.Load(fileContent);
-
-//            var result = xmlParser.Orgs;
-
-//            var nsk = (from o in result where o.Id == "245" select o).First();
-
-//            Assert.AreEqual("3", nsk.ParentId);
-//            Assert.AreEqual("Akershus og Oslo", nsk.ParentName);
-//        }
-
-//        [TestMethod]
-//        public void DownloadEvents()
-//        {
-//            var proxy = new EventorWebService("apikey", "");
-
-//            var events = proxy.GetEvents(new DateTime(2011, 01, 01), new DateTime(2012, 01, 01));
-
-//            Assert.IsNotNull(events);
-//        }
-
-//        [TestMethod]
-//        public void DownloadOrganisations()
-//        {
-//            var proxy = new EventorWebService();
-
-//            var response = proxy.GetAllOrganisations();
-
-//            Assert.IsNotNull(response);
-//        }
-
-//    }
-//}
+            Assert.IsNotNull(response);
+        }
+    }
+}

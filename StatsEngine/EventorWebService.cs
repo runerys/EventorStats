@@ -15,14 +15,14 @@
             this.baseUrl = baseUrl;
         }
 
-        public string GetEvents(DateTime from, DateTime to)
+        public virtual string GetEvents(DateTime from, DateTime to)
         {
             string url = string.Format("events?fromDate={0:yyyy-MM-dd}&toDate={1:yyyy-MM-dd}", from, to);
 
             return this.Get(url);
         }
 
-        public string GetAllOrganisations()
+        public virtual string GetAllOrganisations()
         {
             string url = "organisations";
 

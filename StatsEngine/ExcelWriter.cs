@@ -5,9 +5,9 @@
 
     public class ExcelWriter
     {
-        public void Write(List<FileRow> results, string filename)
+        public void Write(List<Event> results, string filename)
         {
-            ExcelStorage storage = new ExcelStorage(typeof(FileRow));
+            ExcelStorage storage = new ExcelStorage(typeof(Event));
 
             storage.StartColumn = 1;
             storage.StartRow = 1;

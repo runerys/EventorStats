@@ -5,10 +5,10 @@
     public class AggregateService
     {        
         private readonly EventRepository eventRepository;
-        private readonly OrganisationRepository orgRepository;
+        private readonly OrgRepository orgRepository;
         private readonly ExcelWriter excelWriter;
 
-        public AggregateService(EventRepository eventRepository, OrganisationRepository orgRepository, ExcelWriter excelWriter)
+        public AggregateService(EventRepository eventRepository, OrgRepository orgRepository, ExcelWriter excelWriter)
         {
             this.eventRepository = eventRepository;
             this.orgRepository = orgRepository;
@@ -19,7 +19,7 @@
         {                        
             var fileRows = eventRepository.GetAllEventsForNextYear(fromDate);
             
-            orgRepository.FillOrgNames(fileRows);
+            orgRepository.PopulateOrgInfo(fileRows);
            
             excelWriter.Write(fileRows, excelFileName);
         }
